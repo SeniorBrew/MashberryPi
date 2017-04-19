@@ -2,11 +2,10 @@
 
 class Task {
 	public:
-		virtual int Task() = 0;
-		virtual int set_state(int) = 0;
-		virtual int init() = 0;
-		virtual int tick(int);
+		virtual Task(int) = 0;
+		virtual int tick_function() = 0;
 
+		int tick(int);
 		int get_period_s() {return period_ms / 1000;};
 		int get_period_ms() {return period_ms;};
 		int get_period_us() {return period_ms * 1000;};
@@ -16,6 +15,12 @@ class Task {
 		int period_ms;
 		int elapsed_time;
 };
+
+virtual Task::Task(int ms) {
+	state = -1;
+	period_ms = ms;
+	elapsed_time = ms;
+}
 
 class TaskList {
 	public:
