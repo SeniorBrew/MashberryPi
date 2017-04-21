@@ -1,38 +1,34 @@
 #include "task.hpp"
-#include <std/vector>
+//#include "tasklist.hpp"
+#include <signal.h>
+#include <unistd.h>
+#include <sys/time.h>
+#include <vector>
 
-TaskList::TaskList() {
-}
+using namespace std;
 
-TaskList::~TaskList() {
-}
-
-vector<Task> TaskList::addTask(Task T) {
-	tasks.add(T);
-	set_period_ms(findGCD(T.get_period()));
-}
-
-int TaskList::init(void) {
-	set_timer_ms(period_ms);
-	signal(SIGALRM, tick);
-}
-
-int TaskList::tick(void) {
-	for (iterator<Task> T = tasks.begin(); T != tasks.end(); ++T) {
-		T.tick(period_ms);
-	}
+Task::Task(int ms) {
+	state = -1;
+	period_ms = ms;
+	elapsed_time = ms;
 }
 
 int Task::tick(int ms) {
 	if (elapsed_time >= period_ms) {
-		tick_function();
+		this->tick_function();
 		elapsed_time = 0;
 	}
 	elapsed_time += ms;
 }
 
-int TaskList::findGCD(int) {
+vector<Task> TaskList::addTask(Task & T) {
+	tasks.push_back(T);
+	set_period_ms(findGCD(T.get_period_ms()));
+}
+
+int TaskList::findGCD(int b) {
 	int c;
+    int a = period_ms;
 	while(1) {
 		c = a%b;
 		if (c == 0) { return b; }
@@ -42,7 +38,18 @@ int TaskList::findGCD(int) {
 	return 0;
 }
 
-void set_timer_seconds(long int s) {
+int TaskList::init(void) {
+	set_timer_ms(period_ms);
+	signal(SIGALRM, Task::list.tick);
+}
+
+void TaskList::tick(int i) {
+	for (vector<Task>::iterator T = tasks.begin(); T != tasks.end(); ++T) {
+		T->tick(period_ms);
+	}
+}
+
+void TaskList::set_timer_s(long int s) {
 	struct itimerval timer;
 
 											// Interval for periodic timer
@@ -55,7 +62,7 @@ void set_timer_seconds(long int s) {
 	setitimer(ITIMER_REAL, &timer, NULL);
 }
 
-void set_timer_milliseconds(int ms) {
+void TaskList::set_timer_ms(long int ms) {
 	struct itimerval timer;
 
 											// Interval for periodic timer
@@ -68,7 +75,7 @@ void set_timer_milliseconds(int ms) {
 	setitimer(ITIMER_REAL, &timer, NULL);
 }
 
-void set_timer_microseconds(int us) {
+void TaskList::set_timer_us(long int us) {
 	struct itimerval timer;
 
 											// Interval for periodic timer

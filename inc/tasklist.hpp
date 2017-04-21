@@ -1,30 +1,10 @@
-#ifndef TASK_HPP
-#define TASK_HPP
+#ifndef TASKLIST_HPP
+#define TASKLIST_HPP
 
+#include "task.hpp"
 #include <vector>
 
 using namespace std;
-
-class TaskList;
-
-class Task {
-	public:
-        static TaskList list;
-
-		Task(int);
-		int tick(int);
-		int get_period_s() {return period_ms / 1000;};
-		int get_period_ms() {return period_ms;};
-		int get_period_us() {return period_ms * 1000;};
-
-	protected:
-		int state;
-		int period_ms;
-		int elapsed_time;
-
-    private:
-		virtual int tick_function() = 0;
-};
 
 class TaskList {
 	public:
@@ -34,11 +14,11 @@ class TaskList {
 		int get_period_us(void) { return period_ms * 1000; };
 
 		int init();
-		static void tick(int i = 0);
+		void tick();
 
 	private:
-		static vector<Task> tasks;
-		static int period_ms;
+		vector<Task> tasks;
+		int period_ms;
 
 		void set_period_s(int s) { period_ms = s * 1000; };
 		void set_period_ms(int ms) { period_ms = ms; };
@@ -48,4 +28,5 @@ class TaskList {
         void set_timer_us(long int);
 		int findGCD(int);
 };
+
 #endif
