@@ -1,15 +1,15 @@
 #include "task.hpp"
-#include "heater.hpp"
+#include "pump.hpp"
 #include <wiringPi.h>
 #include <iostream>
 
-Heater::Heater(int ms) : Task(ms) {
-	pinMode(0, OUTPUT);
-	digitalWrite(0, LOW);
+Pump::Pump(int ms) : Task(ms) {
+	pinMode(3, OUTPUT);
+	digitalWrite(3, LOW);
 	state = INIT;
 }
 
-int Heater::tick_function() {
+int Pump::tick_function() {
 
 	/* State transitions */
 	switch(state) {
@@ -30,13 +30,13 @@ int Heater::tick_function() {
 	/* State actions */
 	switch(state) {
 		case INIT:
-			digitalWrite(0, LOW);
+			digitalWrite(3, LOW);
 			break;
 		case ON:
-			digitalWrite(0, HIGH);
+			digitalWrite(3, HIGH);
 			break;
 		case OFF:
-			digitalWrite(0, LOW);
+			digitalWrite(3, LOW);
 			break;
 		default:
 			break;

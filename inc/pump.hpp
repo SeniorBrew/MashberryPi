@@ -1,12 +1,12 @@
-#ifndef HEATER_HPP
-#define HEATER_HPP
+#ifndef PUMP_HPP
+#define PUMP_HPP 
 
 #include "task.hpp"
 #include <wiringPi.h>
 
-class Heater : public Task {
+class Pump : public Task {
 	public:
-		Heater(int ms);
+		Pump(int ms);
 	private:
 		enum States { INIT, ON, OFF } state;
 
