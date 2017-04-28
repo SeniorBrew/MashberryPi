@@ -9,7 +9,6 @@
  *****************************************************************************/
 
 #include "task.hpp"
-#include "tasklist.hpp"
 #include "ping.hpp"
 #include "heater.hpp"
 #include "pump.hpp"
@@ -19,14 +18,14 @@ int main(void) {
 	extern int timer_flag;
 	TaskList * T = new TaskList();
 
-	if(wiringPiSetup())
-		return 1;
+	//if(wiringPiSetup())
+		//return 1;
 
 	/* Add new tasks here */
 	/* T->add_task(new Task(period_ms)); */
 	T->add_task(new Ping(1000));
 	T->add_task(new Heater(500));
-	//T->add_task(new Pump(3000));
+	T->add_task(new Pump(3000));
 
 	if(timer_init(T->get_period_ms()))
 		return 1;

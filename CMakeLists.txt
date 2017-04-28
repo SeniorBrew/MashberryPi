@@ -17,6 +17,3 @@ include_directories(${WIRINGPI_INCLUDE_DIRS})
 # Link against libraries
 target_link_libraries(MashberryPi ${WIRINGPI_LIBRARIES})
 #target_link_libraries(MashberryPi ${CMAKE_THREAD_LIBS_INIT})
-
-#add_definitions(-std=c++0x -L/usr/lib/libwiringPi.???.(so|a) -lwiringPi -lpthread)
-
