@@ -18,8 +18,8 @@ int main(void) {
 	extern int timer_flag;
 	TaskList * T = new TaskList();
 
-	//if(wiringPiSetup())
-		//return 1;
+	if(wiringPiSetup())
+		return 1;
 
 	/* Add new tasks here */
 	/* T->add_task(new Task(period_ms)); */
