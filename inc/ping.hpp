@@ -12,7 +12,7 @@ class Ping : public Task {
 	public:
 		Ping(int ms);
 	private:
-		enum States { INIT } state;
+		enum States { INIT, ON, OFF } state;
 		int o_num;
 
 		virtual int tick_function();

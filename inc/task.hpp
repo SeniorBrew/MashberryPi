@@ -17,7 +17,7 @@ class Task {
 		int get_period_ms() {return period_ms;};
 
 	protected:
-		int state;
+		enum States { INIT } state;
 		int period_ms;
 		int elapsed_time;
 

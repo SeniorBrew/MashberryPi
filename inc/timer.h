@@ -28,7 +28,7 @@ void timer_set_ms(long int ms) {
 	struct itimerval timer;
 
 	// Interval for periodic timer
-	timer.it_interval.tv_usec = ((ms % 1000) * 1000;	// microseconds
+	timer.it_interval.tv_usec = ((ms % 1000) * 1000);	// microseconds
 	timer.it_interval.tv_sec = (ms / 1000);			// seconds
 
 	// Time until next expiration
