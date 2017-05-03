@@ -12,6 +12,7 @@
 #include <iostream>
 
 Ping::Ping(int ms) : Task(ms) {
+	state = INIT;
 	o_num = 0;
 }
 
@@ -26,7 +27,7 @@ int Ping::tick_function() {
 			state = ON;
 			break;
 		case OFF:
-			state = ON;
+			state = INIT;
 			break;
 		default: 
 			state = INIT;
@@ -36,10 +37,9 @@ int Ping::tick_function() {
 	/* State actions */
 	switch(state) {
 		case INIT:
-			o_num = 0;
 			break;
 		case ON:
-			std::cout << o_num++ << std::endl;
+			std::cout << " " << o_num++ << std::endl;
 			break;
 		case OFF:
 			break;

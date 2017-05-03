@@ -13,6 +13,7 @@
 #include "heater.hpp"
 #include "pump.hpp"
 #include "timer.h"
+#include <iostream>
 
 int main(void) {
 	extern int timer_flag;
@@ -24,8 +25,11 @@ int main(void) {
 	/* Add new tasks here */
 	/* T->add_task(new Task(period_ms)); */
 	T->add_task(new Ping(1000));
-	T->add_task(new Heater(500));
-	T->add_task(new Pump(3000));
+	T->add_task(new Ping(10000));
+	//T->add_task(new Heater(500));
+	//T->add_task(new Pump(3000));
+
+	std::cout << T->get_period_ms() << std::endl;
 
 	if(timer_init(T->get_period_ms()))
 		return 1;

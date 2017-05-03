@@ -16,9 +16,9 @@ class Task {
 		int tick(int);
 		int get_period_ms() {return period_ms;};
 
+		int period_ms;
 	protected:
 		enum States { INIT } state;
-		int period_ms;
 		int elapsed_time;
 
 	private:
