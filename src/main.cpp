@@ -12,8 +12,11 @@
 #include "ping.hpp"
 #include "heater.hpp"
 #include "pump.hpp"
+#include "timer.hpp"
 #include "timer.h"
-#include <iostream>
+#include "thermometer.hpp"
+#include <wiringPi.h>
+#include <ads1115.h>
 
 int main(void) {
 	extern int timer_flag;
@@ -21,15 +24,19 @@ int main(void) {
 
 	if(wiringPiSetup())
 		return 1;
+	if(!ads1115Setup(2222, 0x48))
+		return 1;
 
 	/* Add new tasks here */
-	/* T->add_task(new Task(period_ms)); */
-	T->add_task(new Ping(1000));
-	T->add_task(new Ping(10000));
-	//T->add_task(new Heater(500));
-	//T->add_task(new Pump(3000));
+	Thermometer hlt_therm(500, 0);
+	Thermometer mash_therm(500, 1);
+	Timer timer(1000);
+	Heater hlt_heat(1000, timer, hlt_therm, mash_therm, 0);
 
-	std::cout << T->get_period_ms() << std::endl;
+	T->add_task(&hlt_therm);
+	T->add_task(&mash_therm);
+	T->add_task(&timer);
+	T->add_task(&hlt_heat);
 
 	if(timer_init(T->get_period_ms()))
 		return 1;
