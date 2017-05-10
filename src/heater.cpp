@@ -25,12 +25,12 @@ int Heater::tick_function() {
 	/* State transitions */
 	switch(state) {
 		case INIT:
-			std::cout << "PRE_MASH" << std::endl;
+			std::cout << std::endl << "PRE_MASH" << std::endl << std::endl;
 			state = PRE_MASH;
 			break;
 		case PRE_MASH:
 			if (hlt_therm->get_temp() >= MASH_TEMP) {
-				std::cout << "TRANSFER" << std::endl;
+				std::cout << std::endl << "TRANSFER" << std::endl << std::endl;
 				state = TRANSFER;
 			} else {
 				state = PRE_MASH;
@@ -39,12 +39,12 @@ int Heater::tick_function() {
 		case TRANSFER:
 			/* TODO: Pump/Vol logic */
 			time->start_timer();
-			std::cout << "MASH" << std::endl;
+			std::cout << std::endl << "MASH" << std::endl << std::endl;
 			state = MASH;
 			break;
 		case MASH:
 			if (time->get_minutes() >= MASH_TIME) {
-				std::cout << "PRE_SPARGE" << std::endl;
+				std::cout << std::endl << "PRE_SPARGE" << std::endl << std::endl;
 				state = PRE_SPARGE;
 			} else {
 				state = MASH;
@@ -52,7 +52,7 @@ int Heater::tick_function() {
 			break;
 		case PRE_SPARGE:
 			if (hlt_therm->get_temp() >= SPARGE_TEMP) {
-				std::cout << "SPARGE" << std::endl;
+				std::cout << std::endl << "SPARGE" << std::endl << std::endl;
 				state = SPARGE;
 			} else {
 				state = PRE_SPARGE;
@@ -60,7 +60,7 @@ int Heater::tick_function() {
 			break;
 		case SPARGE:
 			/* TODO: Pump/Vol logic */
-			std::cout << "END" << std::endl;
+			std::cout << std::endl << "END" << std::endl << std::endl;
 			state = END;
 			break;
 		case END:
@@ -76,6 +76,8 @@ int Heater::tick_function() {
 		case INIT:
 			pinMode(pin, OUTPUT);
 			digitalWrite(pin, LOW);
+			pinMode(2, OUTPUT);
+			digitalWrite(2, LOW);
 			break;
 		case PRE_MASH:
 			//std::cout << "HEATER ON" << std::endl;
@@ -93,10 +95,19 @@ int Heater::tick_function() {
 				//std::cout << "HEATER ON" << std::endl;
 				digitalWrite(pin, HIGH);
 			}
+			if ((mash_therm->get_temp() < MASH_TEMP)
+					&& (hlt_therm->get_temp() >= MASH_TEMP +10)) {
+				//std::cout << "PUMP ON" << std::endl;
+				digitalWrite(2, HIGH);
+			} else {
+				//std::cout << "PUMP OFF" << std::endl;
+				digitalWrite(2, LOW);
+			}
 			break;
 		case PRE_SPARGE:
 			//std::cout << "HEATER ON" << std::endl;
 			digitalWrite(pin, HIGH);
+			digitalWrite(2, LOW);
 			break;
 		case SPARGE:
 			//std::cout << "HEATER OFF" << std::endl;

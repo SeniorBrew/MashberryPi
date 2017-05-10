@@ -36,6 +36,7 @@ int Thermometer::tick_function() {
 			break;
 		case POLL_TEMP:
 			temperature = poll_temp();
+			std::cout << "Temp " << channel << ": " << temperature << std::endl;
 			break;
 		default:
 			break;

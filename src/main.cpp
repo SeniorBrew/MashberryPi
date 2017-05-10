@@ -29,7 +29,7 @@ int main(void) {
 
 	/* Add new tasks here */
 	Thermometer hlt_therm(500, 0);
-	Thermometer mash_therm(500, 1);
+	Thermometer mash_therm(500, 2);
 	Timer timer(1000);
 	Heater hlt_heat(1000, timer, hlt_therm, mash_therm, 0);
 
