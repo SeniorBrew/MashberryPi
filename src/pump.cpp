@@ -9,9 +9,12 @@
 #include <iostream>
 
 Pump::Pump(int ms) : Task(ms) {
+
+	std::cout << "Initializing Pump..." << std::endl;
+
 	pinMode(3, OUTPUT);
 	digitalWrite(3, LOW);
-	state = INIT;
+	state = START;
 }
 
 int Pump::tick_function() {

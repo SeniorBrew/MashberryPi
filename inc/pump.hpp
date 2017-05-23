@@ -13,7 +13,7 @@ class Pump : public Task {
 	public:
 		Pump(int ms);
 	private:
-		enum States { INIT, ON, OFF } state;
+		enum States { START, INIT, ON, OFF } state;
 
 		virtual int tick_function();
 };

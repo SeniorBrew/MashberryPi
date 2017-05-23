@@ -18,12 +18,17 @@
 #include <wiringPi.h>
 #include <ads1115.h>
 
+#include <iostream>
+
 int main(void) {
 	extern int timer_flag;
 	TaskList * T = new TaskList();
 
+	std::cout << "Initializing wiringPi..." << std::endl;
 	if(wiringPiSetup())
 		return 1;
+
+	std::cout << "Initializing ads1115..." << std::endl;
 	if(!ads1115Setup(2222, 0x48))
 		return 1;
 
@@ -33,13 +38,19 @@ int main(void) {
 	Timer timer(1000);
 	Heater hlt_heat(1000, timer, hlt_therm, mash_therm, 0);
 
+	std::cout << "Compiling Task List..." << std::endl;
+
 	T->add_task(&hlt_therm);
 	T->add_task(&mash_therm);
 	T->add_task(&timer);
 	T->add_task(&hlt_heat);
 
+	std::cout << "Initializing Timer Interrupts..." << std::endl;
+
 	if(timer_init(T->get_period_ms()))
 		return 1;
+
+	std::cout << "Starting Tasks..." << std::endl;
 
 	for(;;) {
 		T->tick();

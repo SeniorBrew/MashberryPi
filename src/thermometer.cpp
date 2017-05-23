@@ -11,11 +11,16 @@
 #include <ads1115.h>
 
 Thermometer::Thermometer(int ms, int chan) : Task(ms) {
+
+	std::cout << "Initializing Thermometer " << chan << "..." << std::endl;
+
 	channel = chan;
 	state = START;
 }
 
 int Thermometer::tick_function() {
+
+	std::cout << "Thermometer Tick" << std::endl;
 
 	/* State transitions */
 	switch(state) {

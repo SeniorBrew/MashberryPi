@@ -12,6 +12,9 @@
 #include <iostream>
 
 Timer::Timer(int ms) : Task(1000) {
+
+	std::cout << "Initializing Timer..." << std::endl;
+
 	state = START;
 	hours = 0;
 	minutes = 0;
@@ -19,6 +22,8 @@ Timer::Timer(int ms) : Task(1000) {
 }
 
 int Timer::tick_function() {
+
+	std::cout << "Timer Tick" << std::endl;
 
 	/* State transitions */
 	switch(state) {
