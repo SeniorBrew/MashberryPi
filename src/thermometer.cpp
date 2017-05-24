@@ -20,7 +20,7 @@ Thermometer::Thermometer(int ms, int chan) : Task(ms) {
 
 int Thermometer::tick_function() {
 
-	std::cout << "Thermometer Tick" << std::endl;
+	std::cout << "Thermometer " << channel << " Tick" << std::endl;
 
 	/* State transitions */
 	switch(state) {
