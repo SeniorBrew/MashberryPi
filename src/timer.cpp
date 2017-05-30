@@ -12,6 +12,9 @@
 #include <iostream>
 
 Timer::Timer(int ms) : Task(1000) {
+
+	std::cout << "Initializing Timer..." << std::endl;
+
 	state = START;
 	hours = 0;
 	minutes = 0;

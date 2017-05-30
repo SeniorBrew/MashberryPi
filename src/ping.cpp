@@ -12,7 +12,7 @@
 #include <iostream>
 
 Ping::Ping(int ms) : Task(ms) {
-	state = INIT;
+	state = START;
 	o_num = 0;
 }
 

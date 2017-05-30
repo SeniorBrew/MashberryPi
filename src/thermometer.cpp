@@ -11,6 +11,9 @@
 #include <ads1115.h>
 
 Thermometer::Thermometer(int ms, int chan) : Task(ms) {
+
+	std::cout << "Initializing Thermometer " << chan << "..." << std::endl;
+
 	channel = chan;
 	state = START;
 }
