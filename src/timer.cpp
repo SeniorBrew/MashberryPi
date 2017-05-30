@@ -23,8 +23,6 @@ Timer::Timer(int ms) : Task(1000) {
 
 int Timer::tick_function() {
 
-	std::cout << "Timer Tick" << std::endl;
-
 	/* State transitions */
 	switch(state) {
 		case INIT:

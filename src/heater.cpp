@@ -25,8 +25,6 @@ Heater::Heater(int ms, Timer &timer, Thermometer & hlt, Thermometer & mash,
 
 int Heater::tick_function() {
 
-	std::cout << "Heater Tick" << std::endl;
-
 	/* State transitions */
 	switch(state) {
 		case INIT:
