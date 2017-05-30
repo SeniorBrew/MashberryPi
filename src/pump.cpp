@@ -1,17 +1,20 @@
 /******************************************************************************
  * Author: Nicholas Pelham
- * Date  : 4/27/2017
+ * Date  : 5/30/2017
  *****************************************************************************/
 
 #include "task.hpp"
 #include "pump.hpp"
+#include "volume.hpp"
 #include <wiringPi.h>
 #include <iostream>
 
-Pump::Pump(int ms) : Task(ms) {
-	pinMode(3, OUTPUT);
-	digitalWrite(3, LOW);
-	state = INIT;
+Pump::Pump(int ms, Volume & s, Volume & d, int p) : Task(ms) {
+	pin = p;
+	source = s;
+	destination = d;
+	state = START;
+	power_flag = 0;
 }
 
 int Pump::tick_function() {
@@ -19,13 +22,25 @@ int Pump::tick_function() {
 	/* State transitions */
 	switch(state) {
 		case INIT:
-			state = ON;
-			break;
-		case ON:
 			state = OFF;
 			break;
+		case ON:
+			if (!power_flag) {
+				state = OFF;
+			} else if (destination.is_full()) {
+				state = OFF;	
+			} else if (source.is_empty()) {
+				state = OFF;
+			} else {
+				state = ON;
+			}
+			break;
 		case OFF:
-			state = ON;
+			if (power_flag) {
+				state = ON;
+			} else {
+				state = OFF;
+			}
 			break;
 		default: 
 			state = INIT;
@@ -35,17 +50,26 @@ int Pump::tick_function() {
 	/* State actions */
 	switch(state) {
 		case INIT:
-			digitalWrite(3, LOW);
+			pinMode(pin, OUTPUT);
+			digitalWrite(pin, LOW);
 			break;
 		case ON:
-			digitalWrite(3, HIGH);
+			digitalWrite(pin, HIGH);
 			break;
 		case OFF:
-			digitalWrite(3, LOW);
+			digitalWrite(pin, LOW);
 			break;
 		default:
 			break;
 	}
 
 	return 0;
+}
+
+int Pump::on() {
+	power_flag = 1;
+}
+
+int Pump::off() {
+	power_flag = 0;
 }

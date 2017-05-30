@@ -3,25 +3,25 @@
  * Date  : 5/30/2017
  *****************************************************************************/
 
-#ifndef PUMP_HPP
-#define PUMP_HPP 
+#ifndef VOLUME_HPP
+#define VOLUME_HPP 
 
 #include "task.hpp"
-#include "volume.hpp"
 #include <wiringPi.h>
 
-class Pump : public Task {
+class Volume : public Task {
 	public:
-		Pump(int, Volume &, Volume &, int);
+		Volume(int, double, double, double, int, int);
 
-		int on(void);
-		int off(void);
+		int is_full(void);
+		int is_empty(void);
 	private:
-		enum States { START, INIT, ON, OFF } state;
+		enum States { START, INIT, POLL } state;
 		int pin;
-		int power_flag;
-		Volume * source;
-		Volume * destination;
+		double volume;
+		double area;
+		double depth;
+		double capacity;
 
 		virtual int tick_function();
 };
