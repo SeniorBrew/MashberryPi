@@ -17,13 +17,17 @@ class Volume : public Task {
 		int is_empty(void);
 	private:
 		enum States { START, INIT, POLL } state;
-		int pin;
+		int trigger;
+		int echo;
+
 		double volume;
 		double area;
 		double depth;
 		double capacity;
 
 		virtual int tick_function();
+
+		double poll_distance();
 };
 
 #endif

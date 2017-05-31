@@ -13,6 +13,7 @@
 class Pump : public Task {
 	public:
 		Pump(int, Volume &, Volume &, int);
+		Pump(int, Volume &, int);
 
 		int on(void);
 		int off(void);

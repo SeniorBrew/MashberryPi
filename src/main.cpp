@@ -36,6 +36,10 @@ int main(void) {
 	Thermometer hlt_therm(500, 0);
 	Thermometer mash_therm(500, 2);
 	Timer timer(1000);
+	Volume hlt_vol(500, 3.14, 10.0, 1.0, 4, 5);
+	Volume mash_vol(500, 3.14, 10.0, 1.0, 6, 7);
+	Pump hlt_pump(100, hlt_vol, mash_vol, 2);
+	Pump mash_pump(100, mash_vol, 3);
 	Heater hlt_heat(1000, timer, hlt_therm, mash_therm, 0);
 
 	std::cout << "Compiling Task List..." << std::endl;
@@ -43,6 +47,10 @@ int main(void) {
 	T->add_task(&hlt_therm);
 	T->add_task(&mash_therm);
 	T->add_task(&timer);
+	T->add_task(&hlt_vol);
+	T->add_task(&mash_vol);
+	T->add_task(&hlt_pump);
+	T->add_task(&mash_pump);
 	T->add_task(&hlt_heat);
 
 	std::cout << "Initializing Timer Interrupts..." << std::endl;

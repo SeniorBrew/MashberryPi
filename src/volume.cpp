@@ -14,6 +14,9 @@ Volume::Volume(int ms, double a, double d, double c, int t, int e) : Task(ms) {
 	trigger = t;
 	echo = e;
 	state = START;
+	pinMode(trigger, OUTPUT);
+	digitalWrite(trigger, LOW);
+	pinMode(echo, INPUT);
 }
 
 int Volume::tick_function() {
@@ -34,12 +37,19 @@ int Volume::tick_function() {
 	/* State actions */
 	switch(state) {
 		case INIT:
+			std::cout << "Initializing Volumeter on pins " 
+				<< trigger << " and " << echo << "..." 
+				<< std::endl;
+
 			pinMode(trigger, OUTPUT);
-			digitalWrite(pin, LOW);
+			digitalWrite(trigger, LOW);
 			pinMode(echo, INPUT);
 			break;
 		case POLL:
 			volume = area * ( depth - poll_distance() );
+			//std::cout << "Distance " << echo << ": " 
+				//<< poll_distance() << std::endl;
+			//digitalWrite(trigger, HIGH);
 			break;
 		default:
 			break;
@@ -47,29 +57,49 @@ int Volume::tick_function() {
 	return 0;
 }
 
-int poll_distance() {
-	digitalwrite(pin,LOW);
-	delaymicroseconds(2);
-	digitalwrite(pin,HIGH);
-	delaymicroseconds(15);
-	digitalwrite(pin,LOW);
+double Volume::poll_distance() {
+	digitalWrite(trigger, LOW);
+	delayMicroseconds(2);
+	digitalWrite(trigger, HIGH);
+	delayMicroseconds(15);
+	digitalWrite(trigger, LOW);
 
 	/* Expects an initial high value, which will be ignored */
-	while (digitalRead(echo) == HIGH)
-		;
+	int timeout = 100000;
+	int fail = 0;
+	int start_timeout = micros();
+	/*while (digitalRead(echo) == HIGH) {
+		if ((micros() - start_timeout) < timeout) {
+			fail = 1;
+			break;
+		}
+	}*/
 
-	while (digitalRead(echo) == LOW)
-		;
+	while (digitalRead(echo) == LOW) {
+		if ((micros() - start_timeout) > timeout) {
+			fail = 1;
+			break;
+		}
+	}
 
-	int start = micros();
-	while (digitalRead(echo) == HIGH)
-		;
-	int end = micros();
+	int start_measured = micros();
+	while (digitalRead(echo) == HIGH) {
+		if ((micros() - start_timeout) > timeout) {
+			fail = 1;
+			break;
+		}
+	}
+	int end_measured = micros();
 
-	double distance = (end - start) * /*speedofsoundinusec*/ / 2;
+	if (fail) {
+		return -1.0;
+	}
+	double distance = (double)(end_measured - start_measured) * 0.0343 / 2.0;
+	
+	return distance;
 }
 
-int is_full() {
+int Volume::is_full() {
 	if (volume >= capacity) {
 		return 1;
 	} else {
@@ -77,7 +107,7 @@ int is_full() {
 	}
 }
 
-int is_empty() {
+int Volume::is_empty() {
 	if (volume <= 0) {
 		return 1;
 	} else {

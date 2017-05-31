@@ -14,8 +14,6 @@
 Heater::Heater(int ms, Timer &timer, Thermometer & hlt, Thermometer & mash, 
 		int p) : Task(ms) {
 
-	std::cout << "Initializing Heater..." << std::endl;
-
 	pin = p;
 	time = &timer;
 	hlt_therm = &hlt;
@@ -83,10 +81,13 @@ int Heater::tick_function() {
 	/* State actions */
 	switch(state) {
 		case INIT:
+			std::cout << "Initializing Heater on pin " 
+				<< pin << "..." << std::endl;
+
 			pinMode(pin, OUTPUT);
 			digitalWrite(pin, LOW);
-			pinMode(3, OUTPUT);
-			digitalWrite(3, LOW);
+			//pinMode(3, OUTPUT);
+			//digitalWrite(3, LOW);
 			break;
 		case PRE_MASH:
 			//std::cout << "HEATER ON" << std::endl;
@@ -108,19 +109,28 @@ int Heater::tick_function() {
 					&& (hlt_therm->get_temp() >= MASH_TEMP 
 						+10)) {
 				//std::cout << "PUMP ON" << std::endl;
-				digitalWrite(2, HIGH);
+				//digitalWrite(2, HIGH);
 			} else {
 				std::cout << "PUMP OFF" << std::endl;
-				digitalWrite(3, LOW);
+				//digitalWrite(3, LOW);
 			}
 			break;
 		case PRE_SPARGE:
 			//std::cout << "HEATER ON" << std::endl;
 			digitalWrite(pin, HIGH);
-			digitalWrite(3, LOW);
+			//digitalWrite(3, LOW);
 			break;
 		case SPARGE:
 			//std::cout << "HEATER OFF" << std::endl;
 			digitalWrite(pin, LOW);
 			break;
 		case END:
+			//std::cout << "HEATER OFF" << std::endl;
+			digitalWrite(pin, LOW);
+			break;
+		default:
+			break;
+	}
+	
+	return 0;
+}

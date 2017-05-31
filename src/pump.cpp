@@ -11,8 +11,16 @@
 
 Pump::Pump(int ms, Volume & s, Volume & d, int p) : Task(ms) {
 	pin = p;
-	source = s;
-	destination = d;
+	source = &s;
+	destination = &d;
+	state = START;
+	power_flag = 0;
+}
+
+Pump::Pump(int ms, Volume & s, int p) : Task(ms) {
+	pin = p;
+	source = &s;
+	destination = NULL;
 	state = START;
 	power_flag = 0;
 }
@@ -27,9 +35,9 @@ int Pump::tick_function() {
 		case ON:
 			if (!power_flag) {
 				state = OFF;
-			} else if (destination.is_full()) {
+			} else if (destination->is_full()) {
 				state = OFF;	
-			} else if (source.is_empty()) {
+			} else if (source->is_empty()) {
 				state = OFF;
 			} else {
 				state = ON;
@@ -50,6 +58,9 @@ int Pump::tick_function() {
 	/* State actions */
 	switch(state) {
 		case INIT:
+			std::cout << "Initializing pump on pin " << pin
+				<< "..." << std::endl;
+
 			pinMode(pin, OUTPUT);
 			digitalWrite(pin, LOW);
 			break;

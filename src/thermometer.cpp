@@ -12,8 +12,6 @@
 
 Thermometer::Thermometer(int ms, int chan) : Task(ms) {
 
-	std::cout << "Initializing Thermometer " << chan << "..." << std::endl;
-
 	channel = chan;
 	state = START;
 }
@@ -36,6 +34,9 @@ int Thermometer::tick_function() {
 	/* State actions */
 	switch(state) {
 		case INIT:
+			std::cout << "Initializing Thermometer on A" 
+				<< channel << "..." << std::endl;
+
 			break;
 		case POLL_TEMP:
 			temperature = poll_temp();
