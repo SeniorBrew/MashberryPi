@@ -15,6 +15,7 @@
 #include "timer.hpp"
 #include "timer.h"
 #include "thermometer.hpp"
+#include "control.hpp"
 #include <wiringPi.h>
 #include <ads1115.h>
 
@@ -41,8 +42,8 @@ int main(void) {
 	Pump hlt_pump(100, hlt_vol, mash_vol, 2);
 	Pump mash_pump(100, mash_vol, 3);
 	Heater hlt_heat(100, 0);
-	Control control(1000, timer, hlt_therm, mash_therm, hlt_vol, 
-			mash_vol, hlt_heat);
+	Control control(1000, timer, hlt_therm, mash_therm, hlt_pump, 
+			mash_pump, hlt_vol, mash_vol, hlt_heat);
 
 	std::cout << "Compiling Task List..." << std::endl;
 
@@ -54,6 +55,7 @@ int main(void) {
 	T->add_task(&hlt_pump);
 	T->add_task(&mash_pump);
 	T->add_task(&hlt_heat);
+	T->add_task(&control);
 
 	std::cout << "Initializing Timer Interrupts..." << std::endl;
 

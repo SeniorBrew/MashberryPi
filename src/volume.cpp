@@ -7,9 +7,9 @@
 #include "volume.hpp"
 #include <iostream>
 
-Volume::Volume(int ms, double a, double d, double c, int t, int e) : Task(ms) {
-	area = a;
-	depth = d;
+Volume::Volume(int ms, double dia, double dep, double c, int t, int e) : Task(ms) {
+	diameter = dia;
+	depth = dep;
 	capacity = c;
 	trigger = t;
 	echo = e;
@@ -46,7 +46,7 @@ int Volume::tick_function() {
 			pinMode(echo, INPUT);
 			break;
 		case POLL:
-			volume = area * ( depth - poll_distance() );
+			volume = cylinder_volume(diameter, (depth - poll_distance()));
 			//std::cout << "Distance " << echo << ": " 
 				//<< poll_distance() << std::endl;
 			//digitalWrite(trigger, HIGH);
@@ -113,4 +113,16 @@ int Volume::is_empty() {
 	} else {
 		return 0;
 	}
+}
+
+double Volume::circle_area(double diameter) {
+	return (3.14159 * diameter * diameter / 4.0);
+}
+
+double Volume::cylinder_volume(double diameter, double height) {
+	return (circle_area(diameter) * height);
+}
+
+double Volume::cm_to_gal(double volume_in_cm) {
+	return (volume_in_cm * 0.000264172);
 }

@@ -8,20 +8,26 @@
 #include "task.hpp"
 #include "thermometer.hpp"
 #include "volume.hpp"
+#include "pump.hpp"
 #include "heater.hpp"
 #include "control.hpp"
 #include <wiringPi.h>
 #include <iostream>
 
-Control::Control(int ms, Timer &timer, Thermometer & hlt, Thermometer & mash, 
-		Volume &hlt_volume, Volume &mash_volume) : Task(ms) {
+Control::Control(int ms, Timer &timer, Thermometer & hlt_thermometer, 
+		Thermometer & mash_thermometer, Pump & hlt_pump_, 
+		Pump & mash_pump_, Volume &hlt_volume, Volume &mash_volume, 
+		Heater &hlt_heater) 
+		: Task(ms) {
 
-	pin = p;
 	time = &timer;
-	hlt_therm = &hlt;
-	mash_therm = &mash;
+	hlt_therm = &hlt_thermometer;
+	mash_therm = &mash_thermometer;
 	hlt_vol = &hlt_volume;
 	mash_vol = &mash_volume;
+	hlt_pump = &hlt_pump_;
+	mash_pump = &mash_pump_;
+	hlt_heat = &hlt_heater;
 	state = START;
 }
 
@@ -146,5 +152,6 @@ int Control::print_status(void) {
 	std::cout << "HLT            MASH" << std::endl
 		<< "Heat: On/Off   Time: xxx:xx m:s" << std::endl
 		<< "Vol: x Gal     Vol: x Gal" << std::endl
-		<< "Temp: xxx F    Temp: xxx F" << std::endl;
+		<< "Temp: " << hlt_therm->get_temp() << " F    Temp: "
+		<< mash_therm->get_temp() << " F" << std::endl;
 }

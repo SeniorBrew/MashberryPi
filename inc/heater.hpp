@@ -14,6 +14,9 @@
 class Heater : public Task {
 	public:
 		Heater(int, int);
+
+		int on(void);
+		int off(void);
 	private:
 		enum States { START, INIT, ON, OFF } state;
 

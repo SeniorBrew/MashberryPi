@@ -70,6 +70,6 @@ int Heater::on() {
 	power_flag = 1;
 }
 
-int Heater:off() {
+int Heater::off() {
 	power_flag = 0;
 }
