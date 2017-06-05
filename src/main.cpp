@@ -40,7 +40,9 @@ int main(void) {
 	Volume mash_vol(500, 3.14, 10.0, 1.0, 6, 7);
 	Pump hlt_pump(100, hlt_vol, mash_vol, 2);
 	Pump mash_pump(100, mash_vol, 3);
-	Heater hlt_heat(1000, timer, hlt_therm, mash_therm, 0);
+	Heater hlt_heat(100, 0);
+	Control control(1000, timer, hlt_therm, mash_therm, hlt_vol, 
+			mash_vol, hlt_heat);
 
 	std::cout << "Compiling Task List..." << std::endl;
 

@@ -14,12 +14,14 @@
 #include <iostream>
 
 Control::Control(int ms, Timer &timer, Thermometer & hlt, Thermometer & mash, 
-		int p) : Task(ms) {
+		Volume &hlt_volume, Volume &mash_volume) : Task(ms) {
 
 	pin = p;
 	time = &timer;
 	hlt_therm = &hlt;
 	mash_therm = &mash;
+	hlt_vol = &hlt_volume;
+	mash_vol = &mash_volume;
 	state = START;
 }
 

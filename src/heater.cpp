@@ -11,13 +11,10 @@
 #include <wiringPi.h>
 #include <iostream>
 
-Heater::Heater(int ms, Timer &timer, Thermometer & hlt, Thermometer & mash, 
-		int p) : Task(ms) {
+Heater::Heater(int ms, int p) : Task(ms) {
 
 	pin = p;
-	time = &timer;
-	hlt_therm = &hlt;
-	mash_therm = &mash;
+	power_flag = 0;
 	state = START;
 }
 
@@ -26,52 +23,21 @@ int Heater::tick_function() {
 	/* State transitions */
 	switch(state) {
 		case INIT:
-			std::cout << std::endl << "PRE_MASH" << std::endl 
-				<< std::endl;
-			state = PRE_MASH;
+			state = OFF;
 			break;
-		case PRE_MASH:
-			if (hlt_therm->get_temp() >= MASH_TEMP) {
-				std::cout << std::endl << "TRANSFER" 
-					<< std::endl << std::endl;
-				state = TRANSFER;
+		case ON:
+			if (!power_flag) {
+				state = OFF;
 			} else {
-				state = PRE_MASH;
+				state = ON;
 			}
 			break;
-		case TRANSFER:
-			/* TODO: Pump/Vol logic */
-			time->start_timer();
-			std::cout << std::endl << "MASH" << std::endl 
-				<< std::endl;
-			state = MASH;
-			break;
-		case MASH:
-			if (time->get_minutes() >= MASH_TIME) {
-				std::cout << std::endl << "PRE_SPARGE" 
-					<< std::endl << std::endl;
-				state = PRE_SPARGE;
+		case OFF:
+			if (power_flag) {
+				state = ON;
 			} else {
-				state = MASH;
+				state = OFF;
 			}
-			break;
-		case PRE_SPARGE:
-			if (hlt_therm->get_temp() >= SPARGE_TEMP) {
-				std::cout << std::endl << "SPARGE" 
-					<< std::endl << std::endl;
-				state = SPARGE;
-			} else {
-				state = PRE_SPARGE;
-			}
-			break;
-		case SPARGE:
-			/* TODO: Pump/Vol logic */
-			std::cout << std::endl << "END" << std::endl 
-				<< std::endl;
-			state = END;
-			break;
-		case END:
-			state = END;
 			break;
 		default: 
 			state = INIT;
@@ -81,51 +47,16 @@ int Heater::tick_function() {
 	/* State actions */
 	switch(state) {
 		case INIT:
-			std::cout << "Initializing Heater on pin " 
-				<< pin << "..." << std::endl;
+			std::cout << "Initializing heater on pin " << pin
+				<< "..." << std::endl;
 
 			pinMode(pin, OUTPUT);
 			digitalWrite(pin, LOW);
-			//pinMode(3, OUTPUT);
-			//digitalWrite(3, LOW);
 			break;
-		case PRE_MASH:
-			//std::cout << "HEATER ON" << std::endl;
+		case ON:
 			digitalWrite(pin, HIGH);
 			break;
-		case TRANSFER:
-			//std::cout << "HEATER OFF" << std::endl;
-			digitalWrite(pin, LOW);
-			break;
-		case MASH:
-			if (hlt_therm->get_temp() >= MASH_TEMP + 10) {
-				//std::cout << "HEATER OFF" << std::endl;
-				digitalWrite(pin, LOW);
-			} else {
-				//std::cout << "HEATER ON" << std::endl;
-				digitalWrite(pin, HIGH);
-			}
-			if ((mash_therm->get_temp() < MASH_TEMP)
-					&& (hlt_therm->get_temp() >= MASH_TEMP 
-						+10)) {
-				//std::cout << "PUMP ON" << std::endl;
-				//digitalWrite(2, HIGH);
-			} else {
-				std::cout << "PUMP OFF" << std::endl;
-				//digitalWrite(3, LOW);
-			}
-			break;
-		case PRE_SPARGE:
-			//std::cout << "HEATER ON" << std::endl;
-			digitalWrite(pin, HIGH);
-			//digitalWrite(3, LOW);
-			break;
-		case SPARGE:
-			//std::cout << "HEATER OFF" << std::endl;
-			digitalWrite(pin, LOW);
-			break;
-		case END:
-			//std::cout << "HEATER OFF" << std::endl;
+		case OFF:
 			digitalWrite(pin, LOW);
 			break;
 		default:
@@ -133,4 +64,12 @@ int Heater::tick_function() {
 	}
 	
 	return 0;
+}
+
+int Heater::on() {
+	power_flag = 1;
+}
+
+int Heater:off() {
+	power_flag = 0;
 }
