@@ -47,9 +47,8 @@ int Volume::tick_function() {
 			break;
 		case POLL:
 			volume = cylinder_volume(diameter, (depth - poll_distance()));
-			//std::cout << "Distance " << echo << ": " 
-				//<< poll_distance() << std::endl;
-			//digitalWrite(trigger, HIGH);
+			std::cout << "Volume " << echo << ": " 
+				<< cm_to_gal(volume) << std::endl;
 			break;
 		default:
 			break;
@@ -92,7 +91,7 @@ double Volume::poll_distance() {
 	int end_measured = micros();
 
 	if (fail) {
-		return -1.0;
+		return depth;
 	}
 	double distance = (double)(end_measured - start_measured) * 0.0343 / 2.0;
 	
@@ -100,7 +99,7 @@ double Volume::poll_distance() {
 }
 
 int Volume::is_full() {
-	if (volume >= capacity) {
+	if (cm_to_gal(volume) >= capacity) {
 		return 1;
 	} else {
 		return 0;
@@ -108,7 +107,7 @@ int Volume::is_full() {
 }
 
 int Volume::is_empty() {
-	if (volume <= 0) {
+	if (cm_to_gal(volume) <= 0) {
 		return 1;
 	} else {
 		return 0;

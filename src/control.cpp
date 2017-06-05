@@ -3,7 +3,7 @@
  * Date  : 6/4/2017
  *****************************************************************************/
 
-#include "testconstants.h"
+//#include "testconstants.h"
 
 #include "task.hpp"
 #include "thermometer.hpp"
@@ -17,7 +17,8 @@
 Control::Control(int ms, Timer &timer, Thermometer & hlt_thermometer, 
 		Thermometer & mash_thermometer, Pump & hlt_pump_, 
 		Pump & mash_pump_, Volume &hlt_volume, Volume &mash_volume, 
-		Heater &hlt_heater) 
+		Heater &hlt_heater, double mash_temp, double sparge_temp, 
+		int mash_time) 
 		: Task(ms) {
 
 	time = &timer;
@@ -28,6 +29,11 @@ Control::Control(int ms, Timer &timer, Thermometer & hlt_thermometer,
 	hlt_pump = &hlt_pump_;
 	mash_pump = &mash_pump_;
 	hlt_heat = &hlt_heater;
+
+	MASH_TEMP = mash_temp;
+	MASH_TIME = mash_time;
+	SPARGE_TEMP = sparge_temp;
+	
 	state = START;
 }
 
@@ -50,7 +56,7 @@ int Control::tick_function() {
 			}
 			break;
 		case TRANSFER:
-			if (hlt_vol->is_empty()) {
+			if (hlt_vol->is_empty() || mash_vol->is_full()) {
 				time->start_timer();
 				std::cout << std::endl << "MASH" << std::endl 
 					<< std::endl;
@@ -109,14 +115,14 @@ int Control::tick_function() {
 			hlt_pump->on();
 			break;
 		case MASH:
-			if (hlt_therm->get_temp() >= MASH_TEMP + 10) {
+			if (hlt_therm->get_temp() >= MASH_TEMP/* + 10*/) {
 				hlt_heat->off();
 			} else {
 				hlt_heat->on();
 			}
 			if ((mash_therm->get_temp() < MASH_TEMP)
 					&& (hlt_therm->get_temp() >= MASH_TEMP 
-						+10)) {
+						/*+ 10*/)) {
 				mash_pump->on();
 			} else {
 				mash_pump->off();

@@ -21,13 +21,16 @@ class Volume : public Task {
 		int echo;
 
 		double volume;
-		double area;
+		double diameter;
 		double depth;
 		double capacity;
 
 		virtual int tick_function();
 
 		double poll_distance();
+		double circle_area(double);
+		double cylinder_volume(double, double);
+		double cm_to_gal(double);
 };
 
 #endif

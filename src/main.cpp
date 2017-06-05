@@ -18,10 +18,22 @@
 #include "control.hpp"
 #include <wiringPi.h>
 #include <ads1115.h>
+#include <stdlib.h>
 
 #include <iostream>
 
-int main(void) {
+int main(int argc, char ** argv) {
+	if (argc < 4) {
+		return 1;
+	}
+	double mash_temp = atof(argv[1]);
+	double sparge_temp = atof(argv[2]);
+	double mash_time = atoi(argv[3]);
+
+	std::cout << "Mash Temp: " << mash_temp << std::endl;
+	std::cout << "Sparge Temp: " << sparge_temp << std::endl;
+	std::cout << "Mash Time: " << mash_time << std::endl;
+
 	extern int timer_flag;
 	TaskList * T = new TaskList();
 
@@ -37,13 +49,14 @@ int main(void) {
 	Thermometer hlt_therm(500, 0);
 	Thermometer mash_therm(500, 2);
 	Timer timer(1000);
-	Volume hlt_vol(500, 3.14, 10.0, 1.0, 4, 5);
-	Volume mash_vol(500, 3.14, 10.0, 1.0, 6, 7);
+	Volume hlt_vol(500, 30.48, 25.4, 3.0, 4, 5);
+	Volume mash_vol(500, 25.4, 40.64, 3.0, 6, 7);
 	Pump hlt_pump(100, hlt_vol, mash_vol, 2);
 	Pump mash_pump(100, mash_vol, 3);
 	Heater hlt_heat(100, 0);
 	Control control(1000, timer, hlt_therm, mash_therm, hlt_pump, 
-			mash_pump, hlt_vol, mash_vol, hlt_heat);
+			mash_pump, hlt_vol, mash_vol, hlt_heat, 
+			mash_temp, sparge_temp, mash_time);
 
 	std::cout << "Compiling Task List..." << std::endl;
 

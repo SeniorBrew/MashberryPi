@@ -35,7 +35,8 @@ int Pump::tick_function() {
 		case ON:
 			if (!power_flag) {
 				state = OFF;
-			} else if (destination->is_full()) {
+			} else if (destination != NULL 
+					&& destination->is_full()) {
 				power_flag = 0;
 				state = OFF;	
 			} else if (source->is_empty()) {

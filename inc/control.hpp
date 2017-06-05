@@ -17,7 +17,8 @@
 class Control : public Task {
 	public:
 		Control(int, Timer &, Thermometer &, Thermometer &, 
-			Pump &, Pump &, Volume &, Volume &, Heater &);
+			Pump &, Pump &, Volume &, Volume &, Heater &,
+			double, double, int);
 	private:
 		enum States { START, INIT, PRE_MASH, TRANSFER, MASH, 
 			PRE_SPARGE, SPARGE, END } state;
@@ -30,6 +31,10 @@ class Control : public Task {
 		Volume * hlt_vol;
 		Volume * mash_vol;
 		Heater * hlt_heat;
+
+		double MASH_TEMP;
+		double MASH_TIME;
+		int SPARGE_TEMP;
 
 		virtual int tick_function();
 		int print_status(void);
