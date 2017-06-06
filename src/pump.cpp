@@ -65,13 +65,13 @@ int Pump::tick_function() {
 				<< "..." << std::endl;
 
 			pinMode(pin, OUTPUT);
-			digitalWrite(pin, LOW);
-			break;
-		case ON:
 			digitalWrite(pin, HIGH);
 			break;
-		case OFF:
+		case ON:
 			digitalWrite(pin, LOW);
+			break;
+		case OFF:
+			digitalWrite(pin, HIGH);
 			break;
 		default:
 			break;

@@ -34,6 +34,7 @@ Control::Control(int ms, Timer &timer, Thermometer & hlt_thermometer,
 	MASH_TIME = mash_time;
 	SPARGE_TEMP = sparge_temp;
 	
+	state_flag = 0;
 	state = START;
 }
 
@@ -48,20 +49,30 @@ int Control::tick_function() {
 			break;
 		case PRE_MASH:
 			if (hlt_therm->get_temp() >= MASH_TEMP) {
-				std::cout << std::endl << "TRANSFER" 
-					<< std::endl << std::endl;
-				state = TRANSFER;
+				state_flag++;
+				if (state_flag >= 3) {
+					state_flag == 0;
+					std::cout << std::endl << "TRANSFER" 
+						<< std::endl << std::endl;
+					state = TRANSFER;
+				}
 			} else {
+				state_flag == 0;
 				state = PRE_MASH;
 			}
 			break;
 		case TRANSFER:
 			if (hlt_vol->is_empty() || mash_vol->is_full()) {
-				time->start_timer();
-				std::cout << std::endl << "MASH" << std::endl 
-					<< std::endl;
-				state = MASH;
+				state_flag++;
+				if (state_flag >= 3) {
+					state_flag == 0;
+					time->start_timer();
+					std::cout << std::endl << "MASH" 
+						<< std::endl << std::endl;
+					state = MASH;
+				}
 			} else {
+				state_flag == 0;
 				state = TRANSFER;
 			}
 			break;
@@ -76,19 +87,29 @@ int Control::tick_function() {
 			break;
 		case PRE_SPARGE:
 			if (hlt_therm->get_temp() >= SPARGE_TEMP) {
-				std::cout << std::endl << "SPARGE" 
-					<< std::endl << std::endl;
-				state = SPARGE;
+				state_flag++;
+				if (state_flag >= 3) {
+					state_flag == 0;
+					std::cout << std::endl << "SPARGE" 
+						<< std::endl << std::endl;
+					state = SPARGE;
+				}
 			} else {
+				state_flag == 0;
 				state = PRE_SPARGE;
 			}
 			break;
 		case SPARGE:
 			if (hlt_vol->is_empty() && mash_vol->is_empty()) {
-				std::cout << std::endl << "END" << std::endl 
-					<< std::endl;
-				state = END;
+				state_flag++;
+				if (state_flag >= 3) {
+					state_flag == 0;
+					std::cout << std::endl << "END" 
+					<< std::endl << std::endl;
+					state = END;
+				}
 			} else {
+				state_flag == 0;
 				state = SPARGE;
 			}
 			break;

@@ -22,6 +22,7 @@ class Control : public Task {
 	private:
 		enum States { START, INIT, PRE_MASH, TRANSFER, MASH, 
 			PRE_SPARGE, SPARGE, END } state;
+		int state_flag;
 
 		Timer * time;
 		Thermometer * hlt_therm;
