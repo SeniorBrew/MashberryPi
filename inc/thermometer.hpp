@@ -23,6 +23,8 @@ class Thermometer : public Task {
 		double temperature;
 
 		double poll_temp(void);
+		double v_to_c(double);
+		double c_to_f(double);
 		virtual int tick_function();
 };
 

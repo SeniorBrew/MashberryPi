@@ -22,8 +22,15 @@
 
 #include <iostream>
 
+int show_help(void) {
+	std::cout << "MashberryPi [mash_temp] [sparge_temp] [mash_time]"
+		<< std::endl;
+	return 0;
+}
+
 int main(int argc, char ** argv) {
 	if (argc < 4) {
+		show_help();
 		return 1;
 	}
 	double mash_temp = atof(argv[1]);
@@ -60,6 +67,7 @@ int main(int argc, char ** argv) {
 
 	std::cout << "Compiling Task List..." << std::endl;
 
+	/* Add tasks to TaskList here */
 	T->add_task(&hlt_therm);
 	T->add_task(&mash_therm);
 	T->add_task(&timer);

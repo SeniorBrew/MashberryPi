@@ -15,6 +15,7 @@ class Volume : public Task {
 
 		int is_full(void);
 		int is_empty(void);
+		double get_vol(void) {return volume;};
 	private:
 		enum States { START, INIT, POLL } state;
 		int trigger;
