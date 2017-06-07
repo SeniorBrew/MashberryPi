@@ -70,8 +70,8 @@ int Control::tick_function() {
 	/* State transitions */
 	switch(state) {
 		case INIT:
-			std::cout << std::endl << "PRE_MASH" << std::endl 
-				<< std::endl;
+			//time->start_timer(); // ONLY FOR TESTING
+			//state = MASH; // TESTING
 			state = PRE_MASH;
 			break;
 		case PRE_MASH:
@@ -79,8 +79,6 @@ int Control::tick_function() {
 				state_flag++;
 				if (state_flag >= 3) {
 					state_flag == 0;
-					std::cout << std::endl << "TRANSFER" 
-						<< std::endl << std::endl;
 					state = TRANSFER;
 				}
 			} else {
@@ -94,8 +92,6 @@ int Control::tick_function() {
 				if (state_flag >= 3) {
 					state_flag == 0;
 					time->start_timer();
-					std::cout << std::endl << "MASH" 
-						<< std::endl << std::endl;
 					state = MASH;
 				}
 			} else {
@@ -105,8 +101,7 @@ int Control::tick_function() {
 			break;
 		case MASH:
 			if (time->get_minutes() >= MASH_TIME) {
-				std::cout << std::endl << "PRE_SPARGE" 
-					<< std::endl << std::endl;
+				time->stop_timer();
 				state = PRE_SPARGE;
 			} else {
 				state = MASH;
@@ -117,8 +112,6 @@ int Control::tick_function() {
 				state_flag++;
 				if (state_flag >= 3) {
 					state_flag == 0;
-					std::cout << std::endl << "SPARGE" 
-						<< std::endl << std::endl;
 					state = SPARGE;
 				}
 			} else {
@@ -131,8 +124,6 @@ int Control::tick_function() {
 				state_flag++;
 				if (state_flag >= 3) {
 					state_flag == 0;
-					std::cout << std::endl << "END" 
-					<< std::endl << std::endl;
 					state = END;
 				}
 			} else {
@@ -156,13 +147,19 @@ int Control::tick_function() {
 
 			break;
 		case PRE_MASH:
+			std::cout << std::endl << "PRE_MASH" << std::endl 
+				<< std::endl;
 			hlt_heat->on();
 			break;
 		case TRANSFER:
+			std::cout << std::endl << "TRANSFER" 
+				<< std::endl << std::endl;
 			hlt_heat->off();
 			hlt_pump->on();
 			break;
 		case MASH:
+			std::cout << std::endl << "MASH" 
+				<< std::endl << std::endl;
 			if (hlt_therm->get_temp() >= MASH_TEMP + 10) {
 				hlt_heat->off();
 			} else {
@@ -177,10 +174,14 @@ int Control::tick_function() {
 			}
 			break;
 		case PRE_SPARGE:
+			std::cout << std::endl << "PRE_SPARGE" 
+				<< std::endl << std::endl;
 			mash_pump->off();
 			hlt_heat->on();
 			break;
 		case SPARGE:
+			std::cout << std::endl << "SPARGE" 
+				<< std::endl << std::endl;
 			hlt_heat->off();
 			if (sparge_timer < 30) {
 				sparge_timer++;
@@ -199,6 +200,8 @@ int Control::tick_function() {
 			}
 			break;
 		case END:
+			std::cout << std::endl << "END" 
+				<< std::endl << std::endl;
 			hlt_heat->off();
 			hlt_pump->off();
 			mash_pump->off();
@@ -221,8 +224,8 @@ int Control::print_status(void) {
 	 * Temp: xxx F    Temp: xxx F
 	*/
 	std::cout << "HLT            MASH" << std::endl
-		<< "               Time: " << time->get_minutes() 
-		<< ":" << time->get_seconds() << " m:s" << std::endl
+		<< "               Time: " << (MASH_TIME-1 - time->get_minutes()) 
+		<< ":" << (59 - (time->get_seconds() % 60)) << " m:s" << std::endl
 		<< "Vol: " << hlt_vol->get_vol() << " Gal     Vol: "
 		<< mash_vol->get_vol() << " Gal" << std::endl
 		<< "Temp: " << hlt_therm->get_temp() << " F    Temp: "

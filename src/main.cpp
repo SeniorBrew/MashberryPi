@@ -56,8 +56,8 @@ int main(int argc, char ** argv) {
 	Thermometer hlt_therm(500, 0);
 	Thermometer mash_therm(500, 2);
 	Timer timer(1000);
-	Volume hlt_vol(500, 30.48, 25.4, 3.0, 4, 5);
-	Volume mash_vol(500, 25.4, 40.64, 3.0, 6, 7);
+	Volume hlt_vol(500, 30.48, 22.86, 3.0, 4, 5);
+	Volume mash_vol(500, 25.4, 35.56, 3.5, 6, 7);
 	Pump hlt_pump(100, hlt_vol, mash_vol, 2);
 	Pump mash_pump(100, mash_vol, 3);
 	Heater hlt_heat(100, 0);
