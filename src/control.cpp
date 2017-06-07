@@ -35,6 +35,7 @@ Control::Control(int ms, Timer &timer, Thermometer & hlt_thermometer,
 	MASH_TIME = mash_time;
 	SPARGE_TEMP = sparge_temp;
 	
+	sparge_timer = 0;
 	state_flag = 0;
 	state = START;
 }
@@ -59,6 +60,7 @@ Control::Control(int ms, Timer &timer, Thermometer & hlt_thermometer,
 	MASH_TIME = mash_time;
 	SPARGE_TEMP = sparge_temp;
 	
+	sparge_timer = 0;
 	state_flag = 0;
 	state = START;
 }
@@ -184,12 +186,12 @@ int Control::tick_function() {
 				sparge_timer++;
 				mash_pump->on();
 			} else if (boil_pump != NULL) {
-				if (hlt_vol->isEmpty()) {
+				if (hlt_vol->is_empty()) {
 					hlt_pump->off();
 				} else {
 					hlt_pump->on();
 				}
-				if (mash_vol->isEmpty()) {
+				if (mash_vol->is_empty()) {
 					boil_pump->off();
 				} else {
 					boil_pump->on();
@@ -201,7 +203,7 @@ int Control::tick_function() {
 			hlt_pump->off();
 			mash_pump->off();
 			boil_pump->off();
-			exit(0);
+			//exit(0);
 			break;
 		default:
 			break;
@@ -221,8 +223,8 @@ int Control::print_status(void) {
 	std::cout << "HLT            MASH" << std::endl
 		<< "               Time: " << time->get_minutes() 
 		<< ":" << time->get_seconds() << " m:s" << std::endl
-		<< "Vol: " << hlt_vol.get_vol() << " Gal     Vol: "
-		<< mash_vol.get_vol() << " Gal" << std::endl
+		<< "Vol: " << hlt_vol->get_vol() << " Gal     Vol: "
+		<< mash_vol->get_vol() << " Gal" << std::endl
 		<< "Temp: " << hlt_therm->get_temp() << " F    Temp: "
 		<< mash_therm->get_temp() << " F" << std::endl;
 }

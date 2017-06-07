@@ -19,16 +19,21 @@ class Control : public Task {
 		Control(int, Timer &, Thermometer &, Thermometer &, 
 			Pump &, Pump &, Volume &, Volume &, Heater &,
 			double, double, int);
+		Control(int, Timer &, Thermometer &, Thermometer &, 
+			Pump &, Pump &, Pump &, Volume &, Volume &, 
+			Heater &, double, double, int);
 	private:
 		enum States { START, INIT, PRE_MASH, TRANSFER, MASH, 
 			PRE_SPARGE, SPARGE, END } state;
 		int state_flag;
+		int sparge_timer;
 
 		Timer * time;
 		Thermometer * hlt_therm;
 		Thermometer * mash_therm;
 		Pump * hlt_pump;
 		Pump * mash_pump;
+		Pump * boil_pump;
 		Volume * hlt_vol;
 		Volume * mash_vol;
 		Heater * hlt_heat;

@@ -46,9 +46,9 @@ int Volume::tick_function() {
 			pinMode(echo, INPUT);
 			break;
 		case POLL:
-			volume = cylinder_volume(diameter, (depth - poll_distance()));
-			std::cout << "Volume " << echo << ": " 
-				<< cm_to_gal(volume) << std::endl;
+			volume = cm_to_gal(cylinder_volume(diameter, (depth - poll_distance())));
+			//std::cout << "Volume " << echo << ": " 
+				//<< cm_to_gal(volume) << std::endl;
 			break;
 		default:
 			break;

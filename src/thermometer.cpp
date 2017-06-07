@@ -40,8 +40,8 @@ int Thermometer::tick_function() {
 			break;
 		case POLL_TEMP:
 			temperature = poll_temp();
-			std::cout << "Temp " << channel << ": " 
-				<< temperature << std::endl;
+			//std::cout << "Temp " << channel << ": " 
+				//<< temperature << std::endl;
 			break;
 		default:
 			break;
@@ -59,7 +59,7 @@ double Thermometer::poll_temp(void) {
 }
 
 double Thermometer::v_to_c(double v) {
-	return (volts - 0.5) * 100;
+	return (v - 0.5) * 100;
 }
 
 double Thermometer::c_to_f(double c) {
