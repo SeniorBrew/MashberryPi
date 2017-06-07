@@ -21,6 +21,7 @@
 #include <stdlib.h>
 
 #include <iostream>
+#include <sstream>
 
 int show_help(void) {
 	std::cout << "MashberryPi [mash_temp] [sparge_temp] [mash_time]"
@@ -29,13 +30,28 @@ int show_help(void) {
 }
 
 int main(int argc, char ** argv) {
-	if (argc < 4) {
+	double mash_temp;
+	double sparge_temp;
+	double mash_time;
+	if (argc != 2 || argc != 4) {
 		show_help();
 		return 1;
+	} else if (argc == 4) {
+		mash_temp = atof(argv[1]);
+		sparge_temp = atof(argv[2]);
+		mash_time = atoi(argv[3]);
+	} else {
+		string arr[4];
+		int i = 0;
+		std::stringstream ssin(argv[2]);
+		while (ssin.good() && i < 4) {
+			ssin >> arr[i];
+			++i;
+		}
+		mash_temp = atof(argv[1]);
+		sparge_temp = atof(argv[2]);
+		mash_time = atoi(argv[3]);
 	}
-	double mash_temp = atof(argv[1]);
-	double sparge_temp = atof(argv[2]);
-	double mash_time = atoi(argv[3]);
 
 	std::cout << "Mash Temp: " << mash_temp << std::endl;
 	std::cout << "Sparge Temp: " << sparge_temp << std::endl;
