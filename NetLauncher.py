@@ -4,7 +4,7 @@ import socket
 import threading
 import subprocess
 
-bind_ip = "127.0.0.1"
+bind_ip = "192.168.1.236"
 bind_port = 8080
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -23,7 +23,7 @@ def handle_client(client_socket):
 
 	subprocess.call(['./MashberryPi', request])
 
-	//client_socket.send("ACK!")
+	#client_socket.send("ACK!")
 
 	client_socket.close()
 

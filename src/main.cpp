@@ -21,6 +21,7 @@
 #include <stdlib.h>
 
 #include <iostream>
+#include <string>
 #include <sstream>
 
 int show_help(void) {
@@ -33,7 +34,8 @@ int main(int argc, char ** argv) {
 	double mash_temp;
 	double sparge_temp;
 	double mash_time;
-	if (argc != 2 || argc != 4) {
+	if (argc != 2 && argc != 4) {
+		std::cout << argc << std::endl;
 		show_help();
 		return 1;
 	} else if (argc == 4) {
@@ -41,16 +43,16 @@ int main(int argc, char ** argv) {
 		sparge_temp = atof(argv[2]);
 		mash_time = atoi(argv[3]);
 	} else {
-		string arr[4];
+		string arr[3];
 		int i = 0;
-		std::stringstream ssin(argv[2]);
-		while (ssin.good() && i < 4) {
+		std::stringstream ssin(argv[1]);
+		while (ssin.good() && i < 3) {
 			ssin >> arr[i];
 			++i;
 		}
-		mash_temp = atof(argv[1]);
-		sparge_temp = atof(argv[2]);
-		mash_time = atoi(argv[3]);
+		mash_temp = atof(arr[0].c_str());
+		sparge_temp = atof(arr[1].c_str());
+		mash_time = atoi(arr[2].c_str());
 	}
 
 	std::cout << "Mash Temp: " << mash_temp << std::endl;
