@@ -27,6 +27,7 @@ class Control : public Task {
 			PRE_SPARGE, SPARGE, END } state;
 		int state_flag;
 		int sparge_timer;
+		double total_volume;
 
 		Timer * time;
 		Thermometer * hlt_therm;

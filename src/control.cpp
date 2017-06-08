@@ -35,6 +35,7 @@ Control::Control(int ms, Timer &timer, Thermometer & hlt_thermometer,
 	MASH_TIME = mash_time;
 	SPARGE_TEMP = sparge_temp;
 	
+	total_volume = 0.0;
 	sparge_timer = 0;
 	state_flag = 0;
 	state = START;
@@ -60,6 +61,7 @@ Control::Control(int ms, Timer &timer, Thermometer & hlt_thermometer,
 	MASH_TIME = mash_time;
 	SPARGE_TEMP = sparge_temp;
 	
+	total_volume = 0.0;
 	sparge_timer = 0;
 	state_flag = 0;
 	state = START;
@@ -75,7 +77,7 @@ int Control::tick_function() {
 			state = PRE_MASH;
 			break;
 		case PRE_MASH:
-			if (hlt_therm->get_temp() >= MASH_TEMP) {
+			if (hlt_therm->get_temp() >= MASH_TEMP + 15) {
 				state_flag++;
 				if (state_flag >= 3) {
 					state_flag == 0;
@@ -112,6 +114,8 @@ int Control::tick_function() {
 				state_flag++;
 				if (state_flag >= 3) {
 					state_flag == 0;
+					total_volume = hlt_vol->get_vol() 
+						+ mash_vol->get_vol();
 					state = SPARGE;
 				}
 			} else {
@@ -120,7 +124,8 @@ int Control::tick_function() {
 			}
 			break;
 		case SPARGE:
-			if (hlt_vol->is_empty() && mash_vol->is_empty()) {
+			if (total_volume - (hlt_vol->get_vol() 
+					+ mash_vol->get_vol()) >= 2.5) {
 				state_flag++;
 				if (state_flag >= 3) {
 					state_flag == 0;
@@ -186,16 +191,11 @@ int Control::tick_function() {
 			if (sparge_timer < 30) {
 				sparge_timer++;
 				mash_pump->on();
-			} else if (boil_pump != NULL) {
-				if (hlt_vol->is_empty()) {
-					hlt_pump->off();
-				} else {
-					hlt_pump->on();
-				}
-				if (mash_vol->is_empty()) {
-					boil_pump->off();
-				} else {
+			} else {
+				mash_pump->off();
+				if (boil_pump != NULL) {
 					boil_pump->on();
+					hlt_pump->on();
 				}
 			}
 			break;
@@ -205,7 +205,9 @@ int Control::tick_function() {
 			hlt_heat->off();
 			hlt_pump->off();
 			mash_pump->off();
-			boil_pump->off();
+			if (boil_pump != NULL) {
+				boil_pump->off();
+			}
 			//exit(0);
 			break;
 		default:

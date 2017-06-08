@@ -74,13 +74,14 @@ int main(int argc, char ** argv) {
 	Thermometer hlt_therm(500, 0);
 	Thermometer mash_therm(500, 2);
 	Timer timer(1000);
-	Volume hlt_vol(500, 30.48, 22.86, 3.0, 4, 5);
-	Volume mash_vol(500, 25.4, 35.56, 3.5, 6, 7);
+	Volume hlt_vol(500, 30.48, 22.86, 2.5, 4, 5);
+	Volume mash_vol(500, 25.4, 35.56, 2.5, 6, 7);
 	Pump hlt_pump(100, hlt_vol, mash_vol, 2);
 	Pump mash_pump(100, mash_vol, 3);
+	Pump boil_pump(100, mash_vol, 12);
 	Heater hlt_heat(100, 0);
 	Control control(1000, timer, hlt_therm, mash_therm, hlt_pump, 
-			mash_pump, hlt_vol, mash_vol, hlt_heat, 
+			mash_pump, boil_pump, hlt_vol, mash_vol, hlt_heat, 
 			mash_temp, sparge_temp, mash_time);
 
 	std::cout << "Compiling Task List..." << std::endl;
@@ -93,6 +94,7 @@ int main(int argc, char ** argv) {
 	T->add_task(&mash_vol);
 	T->add_task(&hlt_pump);
 	T->add_task(&mash_pump);
+	T->add_task(&boil_pump);
 	T->add_task(&hlt_heat);
 	T->add_task(&control);
 
